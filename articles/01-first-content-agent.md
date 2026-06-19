@@ -192,10 +192,15 @@ import { defineAgent } from "eve";
 
 export default defineAgent({
   model: "minimax/minimax-m3",
+  modelContextWindowTokens: 32768,
 });
 ```
 
-这里选择价格相对较低的 `minimax/minimax-m3`，方便后续反复调试多 Agent 工作流。字符串形式的模型 ID 会通过 Vercel AI Gateway 路由，因此继续使用前面配置的 `AI_GATEWAY_API_KEY` 即可。实际项目可以根据质量、成本和数据合规要求替换模型。
+这里选择价格相对较低的 `minimax/minimax-m3`，方便后续反复调试多 Agent 工作流。字符串形式的模型 ID 会通过 Vercel AI Gateway 路由，因此继续使用前面配置的 `AI_GATEWAY_API_KEY` 即可。
+
+`modelContextWindowTokens` 是一个保守的上下文窗口兜底值。Eve 会尝试从 AI Gateway 模型目录读取模型元数据；如果某个模型暂时没有上下文窗口信息，显式提供这个值可以让本地编译和开发检查稳定通过。实际项目可以根据模型官方说明和任务规模调整。
+
+实际项目可以根据质量、成本和数据合规要求替换模型。
 
 这里值得注意的是，模型配置和角色指令是分开的：
 

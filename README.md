@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | 00 | [认识 Eve](articles/00-introduction.md) | — | 框架定位与系列目标 | 草稿完成 |
 | 01 | [创建第一位内容负责人](articles/01-first-content-agent.md) | [01-first-agent](examples/01-first-agent/) | Agent、instructions 与 Web 对话 | 可运行 |
-| 02 | 内容任务工作区 | `examples/02-task-workspace/` | Sandbox 工作区 | 待开发 |
+| 02 | [内容任务工作区](articles/02-task-workspace.md) | [02-task-workspace](examples/02-task-workspace/) | Sandbox 工作区 | 可运行 |
 | 03 | 管理内容任务 | `examples/03-task-tools/` | 类型安全 Tools | 待开发 |
 | 04 | 固化选题方法 | `examples/04-topic-skill/` | Skills | 待开发 |
 | 05 | 内容任务断点续跑 | `examples/05-durable-task/` | Durable workflow | 待开发 |
@@ -23,7 +23,7 @@
 
 完整设计与每篇边界见[系列规划](articles/series-plan.md)。
 
-## 运行第一阶段
+## 运行示例
 
 环境要求：Node.js 24、npm，以及可用的模型凭据。
 
@@ -35,7 +35,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-打开终端输出的本地地址，按照该目录 README 中的测试任务进行验证。
+把 `examples/01-first-agent` 换成任意已完成阶段目录即可运行对应示例。打开终端输出的本地地址，按照该目录 README 中的测试任务进行验证。
 
 ## 目录约定
 
@@ -43,7 +43,7 @@ npm run dev
 articles/                 系列文章与总规划
 examples/                 各章节完整、独立的代码快照
   01-first-agent/         第一阶段：纯对话内容负责人
-  02-task-workspace/      第二阶段：内容任务工作区（后续加入）
+  02-task-workspace/      第二阶段：内容任务工作区
   ...
 ```
 
