@@ -11,7 +11,7 @@
 | 00 | [认识 Eve](articles/00-introduction.md) | — | 框架定位与系列目标 | 草稿完成 |
 | 01 | [创建第一位内容负责人](articles/01-first-content-agent.md) | [01-first-agent](examples/01-first-agent/) | Agent、instructions 与 Web 对话 | 可运行 |
 | 02 | [内容任务工作区](articles/02-task-workspace.md) | [02-task-workspace](examples/02-task-workspace/) | Sandbox 工作区 | 可运行 |
-| 03 | 管理内容任务 | `examples/03-task-tools/` | 类型安全 Tools | 待开发 |
+| 03 | [资料完整度评估](articles/03-task-tools.md) | [03-task-tools](examples/03-task-tools/) | 业务判断 Tool | 可运行 |
 | 04 | 固化选题方法 | `examples/04-topic-skill/` | Skills | 待开发 |
 | 05 | 内容任务断点续跑 | `examples/05-durable-task/` | Durable workflow | 待开发 |
 | 06 | 组建内容团队 | `examples/06-content-team/` | Subagents | 待开发 |
