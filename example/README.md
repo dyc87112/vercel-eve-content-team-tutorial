@@ -9,4 +9,4 @@
 - `03-content-team/`: subagents + skills 内容团队。
 - `04-sandbox/`: sandbox 隔离运行产物。
 
-每个样例只展示当前文章需要的最小增量。完整成品放在 `demo/final-content-agent/`。
+每个样例只展示当前文章需要的最小增量。阶段性 demo 放在 `demo/final-content-agent/`。

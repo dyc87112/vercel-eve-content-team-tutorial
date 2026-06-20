@@ -1,12 +1,14 @@
-# Vercel Eve Content Agent Tutorial
+# 用 Vercel Eve 搭建一支 AI 内容运营团队
 
-这个仓库用于规划和编写一个 Eve Agent 系列教程，案例目标是从零构建一个公众号内容运营 Agent。
+这个仓库用于规划和编写《用 Vercel Eve 搭建一支 AI 内容运营团队》系列教程。这个案例主要用于学习和试验 Eve 这个新框架，目标是用 SpringForAll 内容运营场景完成一些日常任务，而不是证明这是一套最优业务解决方案。
+
+Eve 仍然很新，API、文档和推荐实践都可能快速变化。因此这里的 demo 更像一次带记录的学习试验：用一个足够真实的任务理解 Eve 的模型配置、skills、subagents、sandbox 等能力，同时保留对业务效果和工程边界的判断。
 
 ## Directory
 
 - `tutorial/`: 系列文章正文、提纲和发布计划。
 - `example/`: 每篇文章对应的最小样例工程。
-- `demo/`: 完整尝试或阶段性成品。当前完整版本在 `demo/final-content-agent/`。
+- `demo/`: 较完整的阶段性试验结果。当前 demo 在 `demo/final-content-agent/`。
 
 ## Current Plan
 

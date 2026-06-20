@@ -1,49 +1,55 @@
-# Vercel Eve 内容运营 Agent 系列教程规划
+# 用 Vercel Eve 搭建一支 AI 内容运营团队：系列规划
+
+## 系列名称
+
+用 Vercel Eve 搭建一支 AI 内容运营团队
 
 ## 系列目标
 
-用一个真实但可控的案例，带读者从零构建一个 SpringForAll 内容运营 Agent。这个 Agent 的目标不是自动发布文章，而是辅助内容团队完成选题研究、文章草稿、审稿检查、定时内容雷达和人工发布前准备。
+用一个真实但可控的案例，带读者从零试验 Eve 这个新框架，并构建一个 SpringForAll 内容运营 Agent。这个 Agent 的目标不是证明这是内容运营的最优业务方案，也不是自动发布文章，而是借助一个日常任务场景学习 Eve 的模型配置、skills、subagents、sandbox 等核心能力。
+
+Eve 还处在快速变化阶段，所以这个系列会把当前实现当作学习样例，而不是标准答案。文章会尽量说明每一步为什么这样试、解决了什么问题、还留下哪些边界。
 
 目标读者：
 
 - 想了解 Eve / Vercel Agent 开发方式的开发者；
-- 熟悉 Node.js / TypeScript，想构建业务型 Agent 的后端开发者；
+- 熟悉 Node.js / TypeScript，想评估 Agent 工程组织方式的后端开发者；
 - 关注内容运营、技术写作自动化、Agent 工程化落地的技术团队。
 
 写作原则：
 
-- 每篇文章都交付一个清晰的阶段性结果；
+- 每篇文章都交付一个清晰的阶段性试验结果；
 - 先讲为什么需要某个 Eve 概念，再引入 API 和目录结构；
-- 不把 Agent 写成纯 prompt demo，而是持续强调模型配置、上下文规划、运行产物隔离、人工审批和可验证性；
-- 示例工程保持小，最终完整尝试放在 `demo/final-content-agent/`。
+- 不把 Agent 写成纯 prompt demo，也不宣称 demo 是业务最优解，而是持续强调模型配置、上下文规划、运行产物隔离、人工审批和可验证性；
+- 示例工程保持小，当前阶段性尝试放在 `demo/final-content-agent/`。
 
 ## 目录约定
 
 - `tutorial/`: 系列文章正文、提纲和规划。
 - `example/`: 每篇文章对应的最小样例工程。
-- `demo/final-content-agent/`: 当前完整尝试，作为 `00` 到 `04` 篇完成后的阶段性目标。
+- `demo/final-content-agent/`: 当前阶段性尝试，作为 `00` 到 `04` 篇完成后的学习目标。
 
 ## 当前路线
 
-### 00. 前言：用 Eve 构建 SpringForAll 内容团队 Agent
+### 00. 开篇：为什么要用 Eve 搭建 AI 内容运营团队
 
 目标：
 
 - 介绍 Eve 是什么；
 - 说明为什么选择“SpringForAll 内容团队”作为案例；
-- 展示最终要构建的 Agent 轮廓；
+- 展示当前要试验的 Agent 轮廓；
 - 交代系列边界：辅助运营，不自动发布。
 
 核心问题：
 
 - Eve 适合表达哪些 Agent 工程概念；
 - 内容运营 Agent 为什么不只是一个聊天机器人；
-- SpringForAll 内容团队 Agent 最终要帮助人完成什么工作；
-- 系列教程会如何从第一个 Agent 逐步演进到完整内容团队。
+- SpringForAll 内容团队 Agent 先尝试帮助人完成什么工作；
+- 系列教程会如何从第一个 Agent 逐步演进到内容团队雏形。
 
 配套样例：
 
-- 无独立样例，引用 `demo/final-content-agent/` 作为最终形态预览。
+- 无独立样例，引用 `demo/final-content-agent/` 作为当前试验目标预览。
 
 ### 01. 第一个 Agent：全套 Vercel 方案与基础 Chat Agent
 
@@ -82,7 +88,7 @@
 
 核心问题：
 
-- 为什么真实项目通常需要可切换 AI Provider；
+- 为什么试验中也需要保留可切换 AI Provider 的空间；
 - `EVE_MODEL_BASE_URL`、`EVE_MODEL_API_KEY`、`EVE_MODEL_ID` 应该如何设计；
 - 为什么自定义或未收录模型需要显式 `modelContextWindowTokens`；
 - 如何写一个 provider 检查脚本，先验证 gateway 再启动 Agent；
@@ -198,4 +204,3 @@
 - 阅读数据自动复盘；
 - 私有知识库 RAG；
 - 团队权限和审计后台。
-
