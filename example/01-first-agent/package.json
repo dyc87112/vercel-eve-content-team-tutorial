@@ -1,0 +1,25 @@
+{
+  "name": "eve-first-agent-example",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The first minimal Eve Agent for the SpringForAll content operations tutorial.",
+  "scripts": {
+    "dev": "eve dev",
+    "build": "eve build",
+    "start": "eve start",
+    "info": "eve info"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "ai": "latest",
+    "eve": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "latest"
+  }
+}
