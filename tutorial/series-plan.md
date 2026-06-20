@@ -21,11 +21,11 @@
 
 - `tutorial/`: 系列文章正文、提纲和规划。
 - `example/`: 每篇文章对应的最小样例工程。
-- `demo/final-content-agent/`: 当前完整尝试，作为第 1-5 篇完成后的阶段性目标。
+- `demo/final-content-agent/`: 当前完整尝试，作为 `00` 到 `04` 篇完成后的阶段性目标。
 
 ## 当前路线
 
-### 01. 前言：用 Eve 构建 SpringForAll 内容团队 Agent
+### 00. 前言：用 Eve 构建 SpringForAll 内容团队 Agent
 
 目标：
 
@@ -45,7 +45,7 @@
 
 - 无独立样例，引用 `demo/final-content-agent/` 作为最终形态预览。
 
-### 02. 第一个 Agent：全套 Vercel 方案与基础 Chat Agent
+### 01. 第一个 Agent：全套 Vercel 方案与基础 Chat Agent
 
 目标：
 
@@ -72,7 +72,7 @@
 - Agent 已经知道自己是 SpringForAll 内容运营助手；
 - 暂不引入自定义 Provider、skills、subagents、sandbox、tools、schedules、evals。
 
-### 03. 接入自定义 AI Provider：Gateway、Coding Plan 与 Token Plan
+### 02. 接入自定义 AI Provider：Gateway、Coding Plan 与 Token Plan
 
 目标：
 
@@ -99,7 +99,7 @@
 - 配置错误时有清晰提示；
 - README 中说明上下文窗口和 token 预算的取舍。
 
-### 04. 使用 Sub Agent + Skill 构建 AI 内容团队
+### 03. 使用 Sub Agent + Skill 构建 AI 内容团队
 
 目标：
 
@@ -126,7 +126,7 @@
 - 有 researcher、writer、reviewer 三个 subagents；
 - 选题不依赖静态内置列表，而是由 skill 约束动态研究流程。
 
-### 05. 使用 Sandbox：隔离运行产物和 Agent 定义代码
+### 04. 使用 Sandbox：隔离运行产物和 Agent 定义代码
 
 目标：
 

@@ -10,7 +10,7 @@
 
 ## Current Plan
 
-当前路线先完成 5 篇：前言、第一个 Agent、自定义 AI Provider、Sub Agent + Skill 内容团队、Sandbox 隔离。
+当前路线先完成 `00` 到 `04` 这 5 篇：前言、第一个 Agent、自定义 AI Provider、Sub Agent + Skill 内容团队、Sandbox 隔离。
 
 后续先保留 4 个规划方向：Tools、Schedules、Evals、部署到 Vercel。
 
