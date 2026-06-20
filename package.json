@@ -10,12 +10,14 @@
     "start": "eve start",
     "info": "eve info",
     "eval": "eve eval",
-    "demo": "node scripts/demo-output.mjs"
+    "demo": "node scripts/demo-output.mjs",
+    "check:gateway": "node scripts/check-custom-gateway.mjs"
   },
   "engines": {
     "node": "24.x"
   },
   "dependencies": {
+    "@ai-sdk/openai-compatible": "^2.0.51",
     "ai": "latest",
     "eve": "latest",
     "zod": "latest"
