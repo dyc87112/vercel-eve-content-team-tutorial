@@ -272,6 +272,14 @@ example/01-first-agent/
 - Agent 已经知道自己是 SpringForAll 内容运营助手；
 - 暂不引入自定义 Provider、skills、subagents、sandbox、tools、schedules、evals。
 
+本篇对应的样例工程在这里：
+
+- [example/01-first-agent](https://github.com/dyc87112/vercel-eve-content-team-tutorial/tree/main/example/01-first-agent)
+
+如果你觉得这个系列对你了解 Eve 或 Agent 工程化有帮助，欢迎给这个仓库点个 Star，也可以继续关注后面的文章：
+
+- [vercel-eve-content-team-tutorial](https://github.com/dyc87112/vercel-eve-content-team-tutorial)
+
 下一篇，我们会处理一个很现实的问题：如果不想只使用 Vercel AI Gateway，或者希望接入自己的 OpenAI-Compatible Provider，Agent 的模型配置应该怎么设计？
 
 这会引出模型选择、base URL、API key、上下文窗口和 token 预算这些更工程化的问题。
