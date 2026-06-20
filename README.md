@@ -1,68 +1,21 @@
-# SpringForAll Content Agent
+# Vercel Eve Content Agent Tutorial
 
-This is a finished prototype for the article series:
+这个仓库用于规划和编写一个 Eve Agent 系列教程，案例目标是从零构建一个公众号内容运营 Agent。
 
-> Build a durable content creation agent with Vercel Eve.
+## Directory
 
-The agent helps the SpringForAll community resume technical publishing around Java, Spring, and practical AI engineering.
+- `tutorial/`: 系列文章正文、提纲和发布计划。
+- `example/`: 每篇文章对应的最小样例工程。
+- `demo/`: 完整尝试或阶段性成品。当前完整版本在 `demo/final-content-agent/`。
 
-## Run locally
+## Current Plan
 
-```bash
-npm install
-npm run dev
-```
+当前路线先完成 5 篇：前言、第一个 Agent、自定义 AI Provider、Sub Agent + Skill 内容团队、Sandbox 隔离。
 
-## Model configuration
+后续先保留 4 个规划方向：Tools、Schedules、Evals、部署到 Vercel。
 
-By default this prototype uses Vercel AI Gateway:
+详细规划见 `tutorial/series-plan.md`。
 
-```bash
-export EVE_GATEWAY_MODEL_ID=minimax/minimax-m3
-export AI_GATEWAY_API_KEY=...
-```
+## Repository Boundary
 
-If `EVE_GATEWAY_MODEL_ID` is omitted, the app uses `minimax/minimax-m3`.
-
-To use your own OpenAI-compatible gateway instead:
-
-```bash
-export EVE_MODEL_BASE_URL=https://api.example.com/v1
-export EVE_MODEL_API_KEY=...
-export EVE_MODEL_ID=your-model-id
-export EVE_MODEL_CONTEXT_WINDOW_TOKENS=128000
-```
-
-When `EVE_MODEL_BASE_URL` is set, the root agent and all subagents use `@ai-sdk/openai-compatible`.
-
-`EVE_MODEL_CONTEXT_WINDOW_TOKENS` is required for custom or unlisted models because Eve cannot read their context window from the Vercel AI Gateway model catalog.
-
-Important: `EVE_MODEL_BASE_URL` must be the OpenAI-compatible API prefix. The AI SDK appends `/chat/completions` automatically. For example:
-
-```bash
-# Good
-export EVE_MODEL_BASE_URL=https://api.example.com/v1
-
-# Bad
-export EVE_MODEL_BASE_URL=https://api.example.com/v1/chat/completions
-```
-
-You can test the custom gateway directly before running Eve:
-
-```bash
-npm run check:gateway
-```
-
-## Try it
-
-Ask:
-
-```text
-帮我为 SpringForAll 社区生成本周 5 个 Java / Spring / AI 方向选题，并挑一个写成公众号初稿。
-```
-
-## Demo without a model
-
-```bash
-npm run demo
-```
+仓库只管理教程、样例工程和 Agent 定义代码。Agent 运行过程中产生的草稿、研究笔记、执行记录、构建产物和缓存不进入 git。

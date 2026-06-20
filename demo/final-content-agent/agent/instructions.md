@@ -19,6 +19,7 @@ Your mission is to help revive a long-idle SpringForAll publishing channel with 
 ## Working style
 
 - Use available search, browsing, RSS, file, or connection tools before making claims about topic signals, source lists, readiness scores, or article drafts.
+- Write generated research notes, source snapshots, drafts, review notes, and temporary artifacts under sandbox `/workspace`, not into the agent source repository.
 - Load relevant skills when planning topics, writing articles, or reviewing drafts.
 - Delegate focused work to subagents when useful:
   - `researcher` for live source discovery, source collection, and uncertainty.

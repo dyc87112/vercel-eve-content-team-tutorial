@@ -36,9 +36,7 @@ const model = usesCustomGateway
     }).chatModel(requireCustomModelId())
   : (process.env.EVE_GATEWAY_MODEL_ID ?? defaultGatewayModelId);
 
-const modelContextWindowTokens = usesCustomGateway
-  ? parseContextWindowTokens(process.env.EVE_MODEL_CONTEXT_WINDOW_TOKENS)
-  : undefined;
+const modelContextWindowTokens = parseContextWindowTokens(process.env.EVE_MODEL_CONTEXT_WINDOW_TOKENS);
 
 export default defineAgent({
   description:
