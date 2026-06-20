@@ -1,0 +1,27 @@
+{
+  "name": "vercel-eve-content-team-tutorial",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A Vercel Eve prototype agent that helps SpringForAll resume daily Java, Spring, and AI content operations.",
+  "scripts": {
+    "dev": "eve dev",
+    "build": "eve build",
+    "start": "eve start",
+    "info": "eve info",
+    "eval": "eve eval",
+    "demo": "node scripts/demo-output.mjs"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "dependencies": {
+    "ai": "latest",
+    "eve": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "latest"
+  }
+}
