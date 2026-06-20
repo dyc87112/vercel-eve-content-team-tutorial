@@ -6,4 +6,5 @@ node_modules/
 !.env.example
 dist/
 target/
+.output/
 .vercel/

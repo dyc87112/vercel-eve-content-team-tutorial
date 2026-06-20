@@ -8,6 +8,8 @@ Use this procedure when drafting or expanding an article.
 
 The article should feel useful to a working Java/Spring developer.
 
+Before drafting, confirm that the selected topic has source anchors. If sources are missing or stale, ask the researcher to collect them or clearly mark the draft as source-incomplete.
+
 Recommended structure:
 
 1. Open with the concrete engineering problem.
@@ -25,3 +27,5 @@ Avoid:
 - fake benchmark numbers;
 - invented APIs or dependency versions;
 - publishing language that suggests the article has already been human reviewed.
+
+When source material is incomplete, write a brief or outline instead of a full publishable draft.

@@ -2,12 +2,13 @@ const output = {
   request: "帮我为 SpringForAll 社区生成本周 5 个 Java / Spring / AI 方向选题，并挑一个写成公众号初稿。",
   agentFlow: [
     "load_skill(topic_planning)",
-    "collect_topic_signals",
-    "score_topics",
+    "delegate(researcher)",
+    "search_or_read_sources(Spring official docs, OpenJDK, GitHub, local backlog)",
+    "score_candidates_with_skill_rules",
     "load_skill(article_writing)",
-    "create_article_brief(topicId=spring-ai-rag-from-zero)",
+    "delegate(writer)",
     "load_skill(review_checklist)",
-    "review_draft",
+    "delegate(reviewer)",
   ],
   recommendedTopics: [
     {
