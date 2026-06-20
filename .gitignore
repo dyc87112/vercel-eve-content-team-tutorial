@@ -1,9 +1,12 @@
+.DS_Store
+
 node_modules/
 .eve/
 .workflow-data/
 .env
 .env.*
 !.env.example
+articles/
 dist/
 target/
 .output/
