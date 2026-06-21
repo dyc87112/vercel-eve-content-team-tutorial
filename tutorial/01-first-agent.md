@@ -1,4 +1,6 @@
-# 第一个 Agent：全套 Vercel 方案与基础 CLI Chat
+# 快速入门 Vercel Eve：构建第一个 Agent
+
+<!-- 公众号封面图：assets/01-first-agent-didi/cover-first-agent.png -->
 
 上一篇我们大致看了 Eve 想解决什么问题，也确定了这个系列的第一阶段目标：围绕 SpringForAll 社区内容维护，做出一个可运行的 AI 内容运营 Agent 雏形。
 
@@ -58,6 +60,8 @@ example/01-first-agent/
 
 - `agent/agent.ts` 定义 Agent 的运行配置；
 - `agent/instructions.md` 定义 Agent 的角色、任务和行为边界。
+
+![用目录路线搭出第一个 Eve Agent](assets/01-first-agent-didi/01-filesystem-agent-map.png)
 
 ## 安装依赖
 
@@ -183,6 +187,8 @@ Your mission is to help maintain a Chinese technical community for Java and Spri
 
 我习惯在早期 instructions 里明确写出限制。这样做不是为了削弱 Agent，而是为了减少误导：第一篇的 Agent 只是起点，它还不是完整内容团队。
 
+![用 instructions 给 Agent 盖上角色、职责和边界](assets/01-first-agent-didi/02-instructions-role-boundary.png)
+
 ## 配置环境变量
 
 创建 `.env.example`：
@@ -232,6 +238,8 @@ eve dev
 如果一切正常，Agent 应该会用中文回答自己是 SpringForAll 的内容运营助手，并说明它可以帮助做选题 brainstorming、内容方向整理、初稿建议等工作。同时，它不应该声称自己已经能自动发布文章。
 
 ![](assets/01-first-agent-1.png)
+
+![在 CLI 中验证第一个 Agent 的角色是否生效](assets/01-first-agent-didi/03-cli-chat-validation.png)
 
 这一步很重要。我们不是只验证模型能不能返回内容，而是在验证 `instructions.md` 是否真的进入了 Agent 的行为。
 
@@ -288,6 +296,4 @@ example/01-first-agent/
 
 - [vercel-eve-content-team-tutorial](https://github.com/dyc87112/vercel-eve-content-team-tutorial)
 
-下一篇，我们会处理一个很现实的问题：如果不想只使用 Vercel AI Gateway，或者希望接入自己的 OpenAI-Compatible Provider，Agent 的模型配置应该怎么设计？
-
-这会引出模型选择、base URL、API key、上下文窗口和 token 预算这些更工程化的问题。
+下一篇，我们会处理一个很现实的问题：如果不想只使用 Vercel AI Gateway，或者希望接入自己的 OpenAI-Compatible Provider，Agent 的模型配置应该怎么处理？
