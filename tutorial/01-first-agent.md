@@ -1,6 +1,8 @@
 # 快速入门 Vercel Eve：用 `eve init` 构建第一个 Agent
 
-上一篇我们聊了 Eve 为什么值得关注：它不是再提供一种模型调用写法，而是把 Agent 运行所需的项目结构、持久执行、沙箱、审批、渠道和评测等能力，放进一套 filesystem-first 的工程框架里。
+<!-- 公众号封面图：assets/01-first-agent-didi/cover-first-agent.png -->
+
+[上一篇:《一个目录一个 Agent，Vercel Eve 的这套 Agent 架构设计太舒服了！》](00-introduction.md)我们聊了 Eve 为什么值得关注：它不是再提供一种模型调用写法，而是把 Agent 运行所需的项目结构、持久执行、沙箱、审批、渠道和评测等能力，放进一套 filesystem-first 的工程框架里。
 
 这一篇开始动手。
 
@@ -80,6 +82,8 @@ example/01-first-agent/
 这里最值得先记住的是 `agent/` 目录。
 
 Eve 的设计是：一个目录就是一个 Agent 的 authored surface。模型配置、系统提示词、工具、技能、子 Agent、渠道、定时任务，都会逐步放在这个目录下面。
+
+![从 eve init 到第一个可运行 Agent](./assets/01-first-agent-didi/01-eve-init-agent-map.png)
 
 ## 先看 `package.json`
 
@@ -174,6 +178,8 @@ Your mission is to help maintain a Chinese technical community for Java and Spri
 这不是给 Agent 降能力，而是让它知道当前阶段的边界：它现在只是一个基础聊天 Agent，还没有搜索工具、内容工作流、审稿 checklist，也没有自动发布能力。
 
 如果一开始就让它表现得像完整内容团队，后面加 skills、subagents 和 sandbox 时，读者反而看不清每一步到底解决了什么问题。
+
+![用 instructions 固定角色、职责和边界](./assets/01-first-agent-didi/02-instructions-role-boundary.png)
 
 ## 配置环境变量
 
@@ -275,6 +281,8 @@ eve dev
 - 不会声称自己已经联网检索了资料。
 
 这一步很关键。
+
+![用 CLI chat 验证 Agent 行为是否生效](./assets/01-first-agent-didi/03-cli-chat-validation.png)
 
 我们不是只在验证 API Key 是否可用，而是在验证 `agent/instructions.md` 真的改变了 Agent 的行为。
 
