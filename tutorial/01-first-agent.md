@@ -235,6 +235,14 @@ eve dev
 
 这一步很重要。我们不是只验证模型能不能返回内容，而是在验证 `instructions.md` 是否真的进入了 Agent 的行为。
 
+如果想先看 Eve 是否正确发现了项目里的 Agent 文件，也可以运行：
+
+```bash
+npm run info
+```
+
+这类检查在后续文章会更有用。随着 skills、subagents、sandbox、schedules 等目录逐步增加，我们需要确认 Eve 识别到的结构和自己预期一致。
+
 ## 最小 Eve Agent 由什么组成
 
 到这里，第一个 Agent 已经跑起来了。回头看这个工程，它其实只有几类文件：
