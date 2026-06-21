@@ -1,19 +1,18 @@
-# 快速入门 Vercel Eve：构建第一个 Agent
+# 快速入门 Vercel Eve：用 `eve init` 构建第一个 Agent
 
-<!-- 公众号封面图：assets/01-first-agent-didi/cover-first-agent.png -->
+上一篇我们聊了 Eve 为什么值得关注：它不是再提供一种模型调用写法，而是把 Agent 运行所需的项目结构、持久执行、沙箱、审批、渠道和评测等能力，放进一套 filesystem-first 的工程框架里。
 
-上一篇我们大致看了 Eve 想解决什么问题，也确定了这个系列的第一阶段目标：围绕 SpringForAll 社区内容维护，做出一个可运行的 AI 内容运营 Agent 雏形。
+这一篇开始动手。
 
-这一篇先不急着做“内容团队”。我们先招聘第一位员工：一个最小可运行的 Eve Agent。
+目标很小，只做一个能跑起来的 SpringForAll 内容运营助手：
 
-它的能力会很简单：
-
-- 知道自己是 SpringForAll 的内容运营助手；
-- 能通过 Vercel AI Gateway 调用模型；
-- 能在本地 Eve CLI 里完成一次对话；
+- 使用 `eve init` 创建项目；
+- 使用 Vercel AI Gateway 调用模型；
+- 编写最小的 Agent 配置和 always-on instructions；
+- 通过 Eve CLI 的 chat 界面完成一次对话；
 - 暂时不引入自定义 Provider、skills、subagents、sandbox、tools、schedules、evals。
 
-对应的完整示例放在：
+对应样例工程在：
 
 ```text
 example/01-first-agent/
@@ -21,30 +20,50 @@ example/01-first-agent/
 
 ## 准备环境
 
-Eve 当前要求 Node.js 24 或更高版本。先确认本机版本：
+Eve 当前要求 Node.js 24 或更高版本。先确认版本：
 
 ```bash
 node -v
 ```
 
-如果版本低于 24，建议先切换 Node 版本。比如使用 `nvm`：
+如果低于 24，可以用 `nvm` 切换：
 
 ```bash
 nvm install 24
 nvm use 24
 ```
 
-然后准备一个 Vercel AI Gateway API Key。第一篇我们先走全套 Vercel 方案，不处理自定义 OpenAI-Compatible Provider。自定义 Provider 会放到下一篇展开。
+还需要准备一个 Vercel AI Gateway API Key。第一篇先走全套 Vercel 方案，不处理自定义 OpenAI-Compatible Provider。模型切换、自定义 base URL、API key 和上下文窗口预算，会放到下一篇展开。
 
-## 创建项目目录
+## 用 `eve init` 创建项目
 
-进入示例目录：
+进入系列仓库的样例目录：
 
 ```bash
-cd example/01-first-agent
+cd example
 ```
 
-这一篇的最小工程结构是：
+执行：
+
+```bash
+npx eve@latest init 01-first-agent
+```
+
+`eve init` 会做几件事：
+
+- 创建 `01-first-agent/` 目录；
+- 写入最小 Agent 文件；
+- 安装依赖；
+- 生成内置 Eve channel；
+- 初始化本地开发所需配置。
+
+创建完成后进入项目：
+
+```bash
+cd 01-first-agent
+```
+
+本文最终整理后的核心结构大致是：
 
 ```text
 example/01-first-agent/
@@ -54,81 +73,43 @@ example/01-first-agent/
   agent/
     agent.ts
     instructions.md
+    channels/
+      eve.ts
 ```
 
-这里最重要的是 `agent/` 目录。Eve 的 filesystem-first 设计会把一个目录当成一个 Agent 来组织，其中：
+这里最值得先记住的是 `agent/` 目录。
 
-- `agent/agent.ts` 定义 Agent 的运行配置；
-- `agent/instructions.md` 定义 Agent 的角色、任务和行为边界。
+Eve 的设计是：一个目录就是一个 Agent 的 authored surface。模型配置、系统提示词、工具、技能、子 Agent、渠道、定时任务，都会逐步放在这个目录下面。
 
-![用目录路线搭出第一个 Eve Agent](assets/01-first-agent-didi/01-filesystem-agent-map.png)
+## 先看 `package.json`
 
-## 安装依赖
-
-先写 `package.json`：
+`eve init` 会写好常用脚本：
 
 ```json
 {
-  "name": "eve-first-agent-example",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "description": "The first minimal Eve Agent for the SpringForAll content operations tutorial.",
   "scripts": {
-    "dev": "eve dev",
     "build": "eve build",
+    "dev": "eve dev",
     "start": "eve start",
-    "info": "eve info"
-  },
-  "engines": {
-    "node": ">=24"
-  },
-  "dependencies": {
-    "ai": "latest",
-    "eve": "latest",
-    "zod": "latest"
-  },
-  "devDependencies": {
-    "@types/node": "latest",
-    "typescript": "latest"
+    "typecheck": "tsc"
   }
 }
 ```
 
-然后安装依赖：
+这一篇主要用两个命令：
 
 ```bash
-npm install
+npm run dev
+npm exec -- eve info
 ```
 
-这里先只保留 Eve 本身和它常见的基础依赖。后面要支持自定义 Provider 时，再增加 `@ai-sdk/openai-compatible`。
+`npm run dev` 会启动 Eve 本地开发 TUI，也就是我们用来聊天的 CLI 界面。
 
-## 配置 TypeScript
+`eve info` 不启动聊天界面，只检查 Eve 是否正确发现了项目里的 Agent 文件。后续目录越来越多时，这个命令会很有用。
 
-再写一个最小 `tsconfig.json`：
+## 配置第一个 Agent
 
-```json
-{
-  "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2022", "DOM"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "strict": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": false,
-    "types": ["node"]
-  },
-  "include": ["agent/**/*.ts"]
-}
-```
-
-这一篇的 TypeScript 代码只有 `agent/agent.ts`，所以 `include` 也只需要覆盖 `agent/**/*.ts`。
-
-## 编写第一个 Agent
-
-现在创建 `agent/agent.ts`：
+打开 `agent/agent.ts`，改成下面这样：
 
 ```ts
 import { defineAgent } from "eve";
@@ -137,20 +118,27 @@ const defaultGatewayModelId = "minimax/minimax-m3";
 
 export default defineAgent({
   model: process.env.EVE_GATEWAY_MODEL_ID ?? defaultGatewayModelId,
+  modelContextWindowTokens: 200_000,
 });
 ```
 
-这就是第一个 Agent 的核心配置。
+`defineAgent` 是 Agent 的运行配置入口。
 
-`defineAgent` 接收 Agent 的运行配置。这里我们只配置一个字段：`model`。
+这里先只做两件事：
 
-第一阶段默认使用 Vercel AI Gateway，所以 `model` 直接写成 Gateway 中的模型 ID。如果环境变量 `EVE_GATEWAY_MODEL_ID` 没有配置，就使用 `minimax/minimax-m3` 作为默认值。
+第一，指定模型。字符串形式的模型 ID 会通过 Vercel AI Gateway 路由。为了方便调整，我们允许用环境变量 `EVE_GATEWAY_MODEL_ID` 覆盖默认模型。
 
-为什么不把模型 ID 写死？因为模型选择经常会调整。即使第一篇只跑最小示例，也建议从一开始就把模型 ID 留成可配置项。
+第二，显式写了 `modelContextWindowTokens`。这是一个很现实的 beta 细节：如果 Eve 当前还没有拿到某个 Gateway 模型的上下文窗口元数据，构建时可能会提示无法编译 compaction 配置。显式声明上下文窗口可以让样例先稳定跑起来。
+
+正式项目里，这个值应该按所选模型的真实上下文窗口调整。下一篇接入自定义 Provider 时，我们会把模型配置、上下文窗口、token 预算和失败边界一起讲清楚。
 
 ## 编写 instructions
 
-接下来创建 `agent/instructions.md`：
+接下来改 `agent/instructions.md`。
+
+它是 Agent 的 always-on system prompt。Eve 会把这份内容放进每一轮模型调用里，所以它适合写稳定身份、长期规则和行为边界，不适合塞一整套临时工作流程。
+
+这一篇先写一个很小的 SpringForAll 内容运营助手：
 
 ```md
 # SpringForAll Content Assistant
@@ -163,6 +151,7 @@ Your mission is to help maintain a Chinese technical community for Java and Spri
 
 - Explain what you can do for SpringForAll content operations.
 - Help brainstorm Java, Spring, Spring AI, Spring Cloud, JVM, backend engineering, and developer tooling topics.
+- Turn vague topic ideas into practical article angles, outlines, and follow-up questions.
 - Keep answers practical and useful for engineers.
 - Ask for human confirmation before treating any content as publish-ready.
 
@@ -172,22 +161,19 @@ Your mission is to help maintain a Chinese technical community for Java and Spri
 - You do not have subagents yet.
 - You do not have custom tools yet.
 - You do not publish content automatically.
+- You should not claim to have checked live sources unless the user provides them in the conversation.
 
 ## Output style
 
-- Write in concise Chinese.
+- Write in concise Chinese by default.
 - Use Markdown when structure helps.
 ```
 
-这份 instructions 先做三件事：
+我会刻意在早期 instructions 里写清楚限制。
 
-1. 告诉 Agent 它是谁：SpringForAll 的内容运营助手；
-2. 告诉 Agent 它能做什么：围绕 Java、Spring、AI 工程实践做内容辅助；
-3. 告诉 Agent 它现在不能做什么：没有 skills、subagents、tools，也不能自动发布。
+这不是给 Agent 降能力，而是让它知道当前阶段的边界：它现在只是一个基础聊天 Agent，还没有搜索工具、内容工作流、审稿 checklist，也没有自动发布能力。
 
-我习惯在早期 instructions 里明确写出限制。这样做不是为了削弱 Agent，而是为了减少误导：第一篇的 Agent 只是起点，它还不是完整内容团队。
-
-![用 instructions 给 Agent 盖上角色、职责和边界](assets/01-first-agent-didi/02-instructions-role-boundary.png)
+如果一开始就让它表现得像完整内容团队，后面加 skills、subagents 和 sandbox 时，读者反而看不清每一步到底解决了什么问题。
 
 ## 配置环境变量
 
@@ -204,20 +190,61 @@ AI_GATEWAY_API_KEY=
 cp .env.example .env
 ```
 
-然后填入自己的 `AI_GATEWAY_API_KEY`：
+然后填入自己的 Vercel AI Gateway Key：
 
 ```bash
 EVE_GATEWAY_MODEL_ID=minimax/minimax-m3
 AI_GATEWAY_API_KEY=你的_Vercel_AI_Gateway_Key
 ```
 
-`EVE_GATEWAY_MODEL_ID` 控制使用哪个 Gateway 模型。`AI_GATEWAY_API_KEY` 是 Vercel AI Gateway 的访问凭据。
+`.env` 不应该提交到 Git。仓库里只保留 `.env.example`，让读者知道需要哪些变量。
 
-`.env` 不应该提交到 Git，所以仓库里只保留 `.env.example`。
+如果还没有 API Key，也可以先运行：
 
-## 启动 Eve dev
+```bash
+npm exec -- eve info
+```
 
-现在启动本地开发模式：
+这个命令只检查项目结构，不会真正发起模型调用。
+
+## 验证 Eve 是否发现了 Agent
+
+运行：
+
+```bash
+npm exec -- eve info
+```
+
+如果正常，会看到类似结果：
+
+```text
+Application
+App Root      .../example/01-first-agent
+Agent Root    .../example/01-first-agent/agent
+Layout        nested
+Compile       ready
+Diagnostics   0 errors, 0 warnings
+Instructions  instructions.md
+Skills        0 skills
+```
+
+这里我们主要确认三件事：
+
+- Eve 找到了 `agent/` 目录；
+- `instructions.md` 被识别；
+- 当前还没有 skills，符合这一篇的目标。
+
+也可以运行构建：
+
+```bash
+npm run build
+```
+
+构建通过，说明 Eve 可以把当前 Agent 编译成可运行输出。
+
+## 启动 CLI chat
+
+现在启动开发模式：
 
 ```bash
 npm run dev
@@ -229,31 +256,31 @@ npm run dev
 eve dev
 ```
 
-启动成功后，就可以在 Eve CLI 中和 Agent 对话。可以先问一句：
+启动后会进入 Eve 的交互式 TUI。在里面输入：
 
 ```text
 你是谁？你能帮 SpringForAll 做什么？
 ```
 
-如果一切正常，Agent 应该会用中文回答自己是 SpringForAll 的内容运营助手，并说明它可以帮助做选题 brainstorming、内容方向整理、初稿建议等工作。同时，它不应该声称自己已经能自动发布文章。
+![](./assets/01-first-agent/1.png)
 
-![](assets/01-first-agent-1.png)
+预期结果不是“模型能回复一句话”这么简单，而是要验证 instructions 是否生效。
 
-![在 CLI 中验证第一个 Agent 的角色是否生效](assets/01-first-agent-didi/03-cli-chat-validation.png)
+一个合格的回答应该满足：
 
-这一步很重要。我们不是只验证模型能不能返回内容，而是在验证 `instructions.md` 是否真的进入了 Agent 的行为。
+- 用中文回答；
+- 知道自己是 SpringForAll 内容运营助手；
+- 能说明可以帮助做选题、文章角度整理、提纲建议等工作；
+- 不会声称自己能自动发布文章；
+- 不会声称自己已经联网检索了资料。
 
-如果想先看 Eve 是否正确发现了项目里的 Agent 文件，也可以运行：
+这一步很关键。
 
-```bash
-npm run info
-```
+我们不是只在验证 API Key 是否可用，而是在验证 `agent/instructions.md` 真的改变了 Agent 的行为。
 
-这类检查在后续文章会更有用。随着 skills、subagents、sandbox、schedules 等目录逐步增加，我们需要确认 Eve 识别到的结构和自己预期一致。
+## 这一版最小 Agent 有什么
 
-## 最小 Eve Agent 由什么组成
-
-到这里，第一个 Agent 已经跑起来了。回头看这个工程，它其实只有几类文件：
+回头看这个工程，它的能力非常克制：
 
 ```text
 example/01-first-agent/
@@ -263,37 +290,46 @@ example/01-first-agent/
   agent/
     agent.ts         # Agent 运行配置
     instructions.md  # Agent 角色和行为说明
+    channels/
+      eve.ts         # eve init 生成的内置 channel
 ```
 
-这也是 Eve filesystem-first 设计最直观的地方：Agent 不是某个控制台里的配置项，而是代码仓库里一组可以审查、版本管理和逐步演进的文件。
+这一篇只完成下面几件事：
 
-第一篇里，我们先把它控制在最小状态：
+- 有一个主 Agent；
+- 有一份 always-on instructions；
+- 使用 Vercel AI Gateway 模型；
+- 可以通过 Eve CLI chat 对话；
+- 可以通过 `eve info` 和 `eve build` 验证项目结构。
 
-- 只有一个主 Agent；
-- 只有 Vercel AI Gateway；
-- 没有自定义 Provider；
-- 没有 skills；
-- 没有 subagents；
-- 没有 sandbox 配置；
-- 没有 tools、schedules 和 evals。
+它暂时没有：
 
-这样做的好处是边界很清楚。后续每增加一个能力，都能看见它解决了什么问题，而不是一上来把所有概念堆在一起。
+- 自定义 Provider；
+- skills；
+- subagents；
+- sandbox；
+- tools；
+- schedules；
+- evals。
+
+这正是我们想要的状态。后面每新增一个目录或能力，都能对应一个明确的问题，而不是把所有概念一次性塞进第一个 demo。
 
 ## 小结
 
-这一篇完成了 SpringForAll 内容运营 Agent 的第一步：
+这一篇，我们用 `eve init` 创建了第一个可运行的 SpringForAll 内容运营 Agent，并完成了最小配置：
 
-- 能启动 Eve dev；
-- 能和 Agent 对话；
-- Agent 已经知道自己是 SpringForAll 内容运营助手；
-- 暂不引入自定义 Provider、skills、subagents、sandbox、tools、schedules、evals。
+- `agent/agent.ts` 负责模型和运行配置；
+- `agent/instructions.md` 负责 Agent 的稳定身份、职责和边界；
+- `.env.example` 记录运行所需环境变量；
+- `eve info` 可以检查 Eve 发现的 Agent 结构；
+- `eve dev` 可以进入 CLI chat 验证 instructions 是否生效。
 
 本篇对应的样例工程在这里：
 
 - [example/01-first-agent](https://github.com/dyc87112/vercel-eve-content-team-tutorial/tree/main/example/01-first-agent)
 
-如果你觉得这个系列对你了解 Eve 或 Agent 工程化有帮助，欢迎给这个仓库点个 Star，也可以继续关注后面的文章：
+如果你觉得这个系列对你了解 Eve 或 Agent 工程化有帮助，欢迎给仓库点个 Star：
 
 - [vercel-eve-content-team-tutorial](https://github.com/dyc87112/vercel-eve-content-team-tutorial)
 
-下一篇，我们会处理一个很现实的问题：如果不想只使用 Vercel AI Gateway，或者希望接入自己的 OpenAI-Compatible Provider，Agent 的模型配置应该怎么处理？
+下一篇，我们会处理一个很现实的问题：如果不想只使用 Vercel AI Gateway，或者希望接入自己的 OpenAI-Compatible Provider，Agent 的模型配置应该怎么设计？

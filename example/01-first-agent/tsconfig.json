@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022", "DOM"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "types": ["node"],
     "strict": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": false,
-    "types": ["node"]
+    "noEmit": true
   },
-  "include": ["agent/**/*.ts"]
+  "include": ["agent/**/*.ts", "evals/**/*.ts", ".eve/**/*.d.ts"]
 }
