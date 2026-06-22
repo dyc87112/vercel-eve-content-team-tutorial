@@ -35,8 +35,6 @@ export default defineAgent({
 
 核心习惯也很简单：**Agent 在开始变复杂之前，先把模型入口、上下文窗口和失败边界显式化。**
 
-![Gateway 与自定义 Provider 两条路径](assets/02-custom-provider-didi/01-provider-route-map.png)
-
 ## 第 02 个样例结构
 
 样例结构如下：
@@ -123,8 +121,6 @@ EVE_MODEL_CONTEXT_WINDOW_TOKENS=128000
 
 开关规则很直接：只要 `EVE_MODEL_BASE_URL` 非空，就使用自定义 Provider；否则继续使用 Vercel AI Gateway。
 
-![环境变量决定模型路径](assets/02-custom-provider-didi/02-env-switchboard.png)
-
 这样默认路径足够简单：只配置 Vercel AI Gateway 就能跑；需要自定义 provider 时，也只改环境变量，不改代码。
 
 ## 改造 `agent/agent.ts`
@@ -199,8 +195,6 @@ EVE_MODEL_CONTEXT_WINDOW_TOKENS=128000
 - 一次任务最多能塞多少上下文；
 - 长上下文带来的成本和延迟；
 - 当上下文不够时，哪些内容应该被压缩、丢弃或让用户重新确认。
-
-![Token Plan 不是随手填一个数字](assets/02-custom-provider-didi/03-token-plan-scale.png)
 
 所以不要把 `modelContextWindowTokens` 当成纯配置项。它同时定义了 Agent 的上下文能力和成本边界。
 
