@@ -186,11 +186,7 @@ export default defineAgent({
 
 默认值 `128000` 只是样例里的保守默认。真实项目要按所选模型的官方上下文窗口来填。模型只有 32K 上下文，就不能写 200K 然后期待它真的吞下 200K token。
 
-## 为什么上下文窗口要显式写
-
-Eve 需要知道模型上下文窗口，才能做 compaction 和上下文管理。Vercel AI Gateway 中已有元数据的模型，框架可能可以自动识别；但在 beta 阶段，或者接入自定义 Provider 时，模型元数据不一定完整。
-
-这时候不如明确写出来：
+Eve 需要知道模型上下文窗口，才能做 compaction 和上下文管理。接入自定义 Provider 时，模型元数据不一定完整，所以这里直接明确写出来：
 
 ```bash
 EVE_MODEL_CONTEXT_WINDOW_TOKENS=128000
@@ -208,7 +204,7 @@ EVE_MODEL_CONTEXT_WINDOW_TOKENS=128000
 
 所以不要把 `modelContextWindowTokens` 当成纯配置项。它同时定义了 Agent 的上下文能力和成本边界。
 
-## 增加 gateway 检查脚本
+## 验证自定义 gateway
 
 接下来写 `scripts/check-custom-gateway.mjs`。它做几件事：
 
@@ -260,124 +256,29 @@ npm run check:gateway -- --stream --include-usage
 
 这一步不是为了证明 Agent 行为正确，而是先排除模型入口问题。如果这里无法返回 `OK`，后面 `eve dev` 里的错误大概率也不是 instructions 或 Agent 工作流的问题。
 
-## 先验证程序
+## 启动 Chat 验证
 
-我本机默认 Node 是 `v22.22.0`，而 Eve 要求 Node.js 24 或更高版本。所以验证时需要先把 Node 24 放到 `PATH` 前面：
-
-```bash
-PATH=/Users/zhaiyongchao/.nvm/versions/node/v24.11.1/bin:$PATH npm install
-```
-
-然后检查 Eve 是否能发现 Agent：
+确认依赖安装完成后，直接启动 Eve：
 
 ```bash
-PATH=/Users/zhaiyongchao/.nvm/versions/node/v24.11.1/bin:$PATH npm exec -- eve info
+npm run dev
 ```
 
-结果里可以看到：
+进入 CLI chat 后，可以问一句：
 
 ```text
-Compile       ready
-Diagnostics   0 errors, 0 warnings
-Instructions  instructions.md
-Skills        0 skills
+你现在是什么角色？能帮 SpringForAll 做什么？
 ```
 
-这说明 Eve 找到了 `agent/` 目录，instructions 正常识别，并且仍然没有 skills，符合这一篇的边界。
+如果配置正确，Agent 会正常响应，并继续遵守 `agent/instructions.md` 里的边界：它是 SpringForAll 内容运营助手，可以辅助选题、提纲和内容规划，但不会声称自己已经具备搜索、发布、审稿团队等后续能力。
 
-再运行构建：
+如果走自定义 Provider，可以先跑一次：
 
 ```bash
-PATH=/Users/zhaiyongchao/.nvm/versions/node/v24.11.1/bin:$PATH npm run build
+npm run check:gateway
 ```
 
-构建通过，并且产物里可以看到自定义 provider 依赖已经被打进去：
-
-```text
-.output/server/_libs/@ai-sdk/openai-compatible+[...].mjs
-[BUILD] built output at .../example/02-custom-provider/.output
-```
-
-最后补两个错误路径。
-
-如果设置了 `EVE_MODEL_BASE_URL`，但没有设置 `EVE_MODEL_ID`：
-
-```bash
-EVE_MODEL_BASE_URL=https://api.example.com/v1 npm exec -- eve info
-```
-
-会得到：
-
-```text
-EVE_MODEL_ID is required when EVE_MODEL_BASE_URL is set.
-```
-
-如果上下文窗口不是正整数：
-
-```bash
-EVE_MODEL_CONTEXT_WINDOW_TOKENS=abc npm exec -- eve info
-```
-
-会得到：
-
-```text
-EVE_MODEL_CONTEXT_WINDOW_TOKENS must be a positive integer.
-```
-
-配置问题能在启动阶段说清楚，就不要留到对话阶段。
-
-## Coding Plan 和 Token Plan
-
-这一篇代码不多，但背后有一个很小的 coding plan：
-
-```text
-目标：让 Agent 支持两种模型入口
-
-默认路径：
-  EVE_GATEWAY_MODEL_ID + AI_GATEWAY_API_KEY
-  -> Vercel AI Gateway
-
-自定义路径：
-  EVE_MODEL_BASE_URL + EVE_MODEL_API_KEY + EVE_MODEL_ID
-  -> OpenAI-Compatible Provider
-
-验证：
-  eve info
-  eve build
-  check-custom-gateway
-  错误配置提示
-```
-
-写 Agent 不是只写 prompt。每新增一个能力，都先回答：
-
-- 入口是什么；
-- 配置在哪里；
-- 失败时怎么提示；
-- 怎么在不启动完整工作流的情况下验证；
-- 哪些能力暂时不做。
-
-这一篇的 token plan 也很小：
-
-- 知道当前模型的上下文窗口；
-- 知道内容运营任务会消耗哪些上下文；
-- 知道上下文不够时不能硬塞。
-
-```bash
-EVE_MODEL_CONTEXT_WINDOW_TOKENS=128000
-```
-
-后面做内容团队时，上下文会来自：
-
-- 用户给的选题方向；
-- 搜集到的来源材料；
-- researcher 的判断；
-- writer 的草稿；
-- reviewer 的修改意见；
-- 主 Agent 的总结和下一步问题。
-
-到那一步，我们会把长资料放进 sandbox，把工作流拆到 skill 和 subagent 中，让每个角色只拿自己需要的上下文。
-
-在这之前，先把模型上下文窗口写成明确配置，就是最小 token plan。
+这个脚本只是提前排除 base URL、模型 ID 和 API key 问题。真正的行为验证，还是以 `npm run dev` 进入 chat 后能正常对话为准。
 
 ## 小结
 
@@ -387,7 +288,7 @@ EVE_MODEL_CONTEXT_WINDOW_TOKENS=128000
 - 配置 `EVE_MODEL_BASE_URL` 后切换到自定义 OpenAI-Compatible Provider；
 - 使用 `EVE_MODEL_CONTEXT_WINDOW_TOKENS` 显式声明上下文窗口；
 - 用 `check-custom-gateway.mjs` 在启动 Eve 前检查自定义模型入口；
-- 用 `eve info`、`eve build` 和错误路径验证，确认程序可运行。
+- 启动 `eve dev`，进入 CLI chat 确认程序可运行。
 
 本篇对应的样例工程在这里：
 
