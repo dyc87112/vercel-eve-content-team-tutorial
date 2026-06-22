@@ -1,0 +1,9 @@
+node_modules
+.env*
+!.env.example
+.eve
+.workflow-data
+.next
+.output
+.nitro
+dist
