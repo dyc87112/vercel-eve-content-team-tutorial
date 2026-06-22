@@ -1,12 +1,20 @@
 # Vercel Eve 接入自定义 AI Provider：别让 Agent 被模型入口绑死
 
-[上一篇:《快速入门 Vercel Eve：用 `eve init` 构建第一个 Agent》](01-first-agent.md)我们做了一个非常克制的 SpringForAll 内容运营助手：只有主 Agent、模型配置、always-on instructions 和 Eve CLI chat。
+[上一篇:《快速入门 Vercel Eve：用 `eve init` 构建第一个 Agent》](01-first-agent.md)我们做了一个极简的 SpringForAll 内容运营助手：只有主 Agent、模型配置、常驻 instructions（系统提示词） 和 Eve CLI chat。
 
 这一篇继续往前走一步。
 
-我们不急着加 skills、subagents、sandbox，也不急着把它包装成完整内容团队。先处理一个更基础、也更现实的问题：
+相信很多朋友跟我一样，手头都有不少 coding plan、token plan 相关的资源。我们真正使用 Agent 的时候，也不一定会直接使用 Vercel AI Gateway，接入第三方 Provider 是个非常需要实现的操作。
 
-> 如果不想只走 Vercel AI Gateway，或者希望接入自己的 OpenAI-Compatible Provider，Eve Agent 的模型配置应该怎么设计？
+比如我自己一直在用开源的 [Octafuse Gateway](https://github.com/OctaFuse/octafuse-gateway) 管理我手头所有的 API 资源。
+
+![](02-custom-provider-didi/octafuse-gateway-provider.png)
+
+这样做的好处是模型供应商、key、路由和成本策略都可以统一收口，业务项目只需要接一个 OpenAI-Compatible 的入口即可。
+
+所以，今天这一篇不急着加 skills、subagents、sandbox，也不急着把 Agent 包装成完整内容团队。我们先处理一个更基础、也更现实的问题：
+
+> 如果不想只走 Vercel AI Gateway，或者希望接入自己的 OpenAI-Compatible Provider，Eve Agent 的模型配置应该怎么实现？
 
 对应样例工程在：
 
@@ -35,7 +43,17 @@ export default defineAgent({
 
 这对快速开始很友好。
 
-但只要把 Agent 放到稍微真实一点的团队场景，模型入口很快就不只是一个字符串了。
+但快速开始和实际落地是两回事。
+
+如果你已经有自己的 gateway，或者已经整理过一套 coding plan、token plan，就会很自然地想问：
+
+> Eve 能不能不要只绑定 Vercel AI Gateway，而是接入我已经在用的模型入口？
+
+答案是可以的。
+
+只要你的 gateway 兼容 OpenAI 的 `/chat/completions` 接口，就可以通过 `@ai-sdk/openai-compatible` 接进来。
+
+把 Agent 放到稍微真实一点的团队场景后，模型入口很快就不只是一个字符串了。
 
 内容运营 Agent 可能会遇到这些情况：
 
