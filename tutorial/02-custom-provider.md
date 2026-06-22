@@ -8,19 +8,13 @@
 
 比如我自己一直在用开源的 [Octafuse Gateway](https://github.com/OctaFuse/octafuse-gateway) 管理我手头所有的 API 资源。
 
-![](02-custom-provider-didi/octafuse-gateway-provider.png)
+![](assets/02-custom-provider-didi/octafuse-gateway-provider.png)
 
 这样做的好处是模型供应商、key、路由和成本策略都可以统一收口，业务项目只需要接一个 OpenAI-Compatible 的入口即可。
 
 所以，今天这一篇不急着加 skills、subagents、sandbox，也不急着把 Agent 包装成完整内容团队。我们先处理一个更基础、也更现实的问题：
 
 > 如果不想只走 Vercel AI Gateway，或者希望接入自己的 OpenAI-Compatible Provider，Eve Agent 的模型配置应该怎么实现？
-
-对应样例工程在：
-
-```text
-example/02-custom-provider/
-```
 
 这一篇的目标是：
 
@@ -29,8 +23,6 @@ example/02-custom-provider/
 - 显式配置模型上下文窗口；
 - 增加一个独立检查脚本，在启动 Eve 之前先验证自定义 gateway；
 - 借这个小改动，引入 coding plan 和 token plan 的工程意识。
-
-## 为什么第二篇就要处理 Provider
 
 第一篇里，我们直接让 Eve 使用 Vercel AI Gateway：
 
@@ -41,32 +33,9 @@ export default defineAgent({
 });
 ```
 
-这对快速开始很友好。
+这对快速开始很友好。但现在我们要把模型入口从一个写死的 Gateway 模型 ID，改成一套可切换的配置：默认继续走 Vercel AI Gateway；只要配置了自己的 OpenAI-Compatible gateway，就切到自定义 Provider。
 
-但快速开始和实际落地是两回事。
-
-如果你已经有自己的 gateway，或者已经整理过一套 coding plan、token plan，就会很自然地想问：
-
-> Eve 能不能不要只绑定 Vercel AI Gateway，而是接入我已经在用的模型入口？
-
-答案是可以的。
-
-只要你的 gateway 兼容 OpenAI 的 `/chat/completions` 接口，就可以通过 `@ai-sdk/openai-compatible` 接进来。
-
-把 Agent 放到稍微真实一点的团队场景后，模型入口很快就不只是一个字符串了。
-
-内容运营 Agent 可能会遇到这些情况：
-
-- 团队已经有统一的 OpenAI-Compatible gateway；
-- 不同环境要使用不同模型；
-- 某些模型还没有被 Vercel AI Gateway 收录；
-- 同一个 Agent 在本地试验、CI、部署环境里的 key 不同；
-- 长文章、研究笔记和审稿上下文会快速吃掉 token；
-- 模型失败时，需要知道是鉴权、base URL、模型 ID、流式输出还是 usage 返回出了问题。
-
-所以这一篇要做的不是「换一个模型调用库」。
-
-真正要建立的是一个习惯：**Agent 在开始变复杂之前，先把模型入口、上下文窗口和失败边界显式化。**
+这一篇真正要建立的习惯也很简单：**Agent 在开始变复杂之前，先把模型入口、上下文窗口和失败边界显式化。**
 
 ![Gateway 与自定义 Provider 两条路径](assets/02-custom-provider-didi/01-provider-route-map.png)
 
