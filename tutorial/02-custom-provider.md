@@ -35,7 +35,9 @@ export default defineAgent({
 
 核心习惯也很简单：**Agent 在开始变复杂之前，先把模型入口、上下文窗口和失败边界显式化。**
 
-## 第 02 个样例结构
+![](assets/02-custom-provider-didi/01-agent-provider-routing.png)
+
+## 本节样例结构
 
 样例结构如下：
 
@@ -182,13 +184,7 @@ export default defineAgent({
 
 默认值 `128000` 只是样例里的保守默认。真实项目要按所选模型的官方上下文窗口来填。模型只有 32K 上下文，就不能写 200K 然后期待它真的吞下 200K token。
 
-Eve 需要知道模型上下文窗口，才能做 compaction 和上下文管理。接入自定义 Provider 时，模型元数据不一定完整，所以这里直接明确写出来：
-
-```bash
-EVE_MODEL_CONTEXT_WINDOW_TOKENS=128000
-```
-
-这也是 token plan 的起点。
+Eve 需要知道模型上下文窗口，才能做 compaction 和上下文管理。接入自定义 Provider 时，模型元数据不一定完整，所以这里直接明确写出来。
 
 内容运营 Agent 后面会处理选题、研究资料、文章草稿和审稿意见。上下文窗口不是越大越好，它会影响：
 
