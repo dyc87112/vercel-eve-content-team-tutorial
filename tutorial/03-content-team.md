@@ -45,6 +45,8 @@ example/03-content-team/
 - `reviewer`: 审核人，负责审校和发布前风险检查；
 - root agent: 内容主编，负责任务拆解和结果整合。
 
+![用 skills 和 subagents 拆出内容创作团队](assets/03-content-team-didi/01-content-team-routing.png)
+
 ## 本节样例结构
 
 最终目录如下：
